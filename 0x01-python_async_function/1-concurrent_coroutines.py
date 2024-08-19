@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
+"""The basic of async"""
+
 from typing import List
 import asyncio
 
-# Importing the wait_random function from 0-basic_async_syntax
 wait_random = __import__('0-basic_async_syntax').wait_random
 
 
