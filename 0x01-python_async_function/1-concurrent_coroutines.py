@@ -1,29 +1,45 @@
 #!/usr/bin/env python3
-""" The basic of async """
+"""The basics of async programming in Python.
 
-from typing import List
+This module demonstrates how to use Python's asyncio library to execute
+concurrent tasks asynchronously. The primary function, `wait_n`, is designed
+to run a specified number of asynchronous tasks concurrently and return the 
+results as a list of floats.
+"""
+
 import asyncio
+from typing import List
 
+# Import the wait_random function from the module '0-basic_async_syntax'
 wait_random = __import__('0-basic_async_syntax').wait_random
-
 
 async def wait_n(n: int, max_delay: int) -> List[float]:
     """
-    Executes wait_random 'n' times with the specified max_delay.
+    Run `wait_random` n times concurrently with the specified `max_delay`.
+
+    This function spawns `n` asynchronous tasks that each call the `wait_random`
+    function with a given `max_delay`. It waits for all tasks to complete and 
+    returns a list of the actual delays in the order of completion.
 
     Args:
-        n (int): The number of times to call wait_random.
-        max_delay (int): The maximum delay value to pass to wait_random.
+        n (int): The number of times to spawn the `wait_random` coroutine.
+        max_delay (int): The maximum delay value (in seconds) for each `wait_random` call.
 
     Returns:
-        List[float]: A list of float values representing the actual delays.
+        List[float]: A list of floats representing the actual delays experienced 
+                     by each call to `wait_random`, ordered by the completion time of the tasks.
 
-    This function concurrently runs 'n' instances of wait_random with the
-    given max_delay. It collects the resulting delays and returns them as
-    a list. Each wait_random call waits for a random amount of time between
-    0 and max_delay seconds before returning the actual delay.
+    Example:
+        >>> asyncio.run(wait_n(5, 10))
+        [3.5, 2.7, 5.1, 8.9, 1.4]
+    
+    Note:
+        The order of the returned delays is based on the order of task completion,
+        not the order in which the tasks were started.
     """
-    batch = []
-    for _ in range(n):
-        batch.append(await wait_random(max_delay))
-    return batch
+    # Create a list of asyncio tasks
+    tasks = [asyncio.create_task(wait_random(max_delay)) for _ in range(n)]
+    
+    # Wait for each task to complete and gather the results in the order of completion
+    return [await task for task in asyncio.as_completed(tasks)]
+
