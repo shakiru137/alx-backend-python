@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""The basic of async"""
+""" The basic of async """
 
 from typing import List
 import asyncio
